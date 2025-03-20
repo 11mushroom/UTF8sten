@@ -4,8 +4,13 @@ PREFIX ?= /usr
 INSTDIR ?= $(PREFIX)/bin
 srcdir = src
 
-progfn := prog
-progfile := $(progfn)
+decoderfn := decoder
+decoderfile := $(decoderfn)
+
+progfiles := decoder encoder
+
+encoderfn := encoder
+encoderfile := $(encoderfn)
 
 SRC := $(wildcard *.cpp)
 
@@ -15,7 +20,7 @@ OBJ = $(SRC:.cpp=.o)
 
 .PHONY: clean install uninstall
 
-all: $(progfile)
+all: $(progfiles)
 	@echo "========"
 	@echo "| Done |"
 	@echo "========"
@@ -24,20 +29,27 @@ all: $(progfile)
 	@echo "  make install"
 
 
-$(progfile): prog.o UTF8.o
+decoder: decoder.o UTF8.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-prog.o: prog.cpp UTF8.h
+decoder.o: decoder.cpp UTF8.h
+	$(CXX) -c $(CXXFLAGS) $< -o $@
+
+encoder: encoder.o UTF8.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+encoder.o: encoder.cpp UTF8.h
 	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 UTF8.o: UTF8.cpp
 	$(CXX) -c $(CXXFLAGS) $^ -o $@
 
 install:
-	cp $(progfile) $(INSTDIR)/
+	cp decoder $(INSTDIR)/$(decoderfn)
+	cp encoder $(INSTDIR)/$(encoderfn)
 
 uninstall:
-	rm $(INSTDIR)/$(progfn)
+	rm $(INSTDIR)/$(decoderfn) $(INSTDIR)/$(encoderfn)
 
 clean:
-	rm $(wildcard *.o) $(progfile)
+	rm $(wildcard *.o) $(progfiles)
