@@ -35,6 +35,8 @@ struct dataBytes {
 
 int getStenLen(int *arr, int len);
 
+dataBytes deSten(int *arr, int len);
+
 int gBit(char num, int ind);
 
 int gBit(int num, int ind);

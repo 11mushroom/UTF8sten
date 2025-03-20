@@ -214,21 +214,56 @@ codePoints UTF8_den( char *bytes ){
 
 }
 
-/*dataBytes deSten(int *arr, int len){
+dataBytes deSten(int *arr, int len){
   dataBytes res(getStenLen(arr, len));
 
   int dataI=0;
   int bits=0;
+  int bitsPass=0;
   int subB=0;
+  int cary=0;
+  int shift=0;
+  bool proc=false;
+
 
   for (int i=0;i<len;i++) {
+    proc=false;
+    bitsPass=0;
+    bits=0;
+
     if (arr[i]<=0x8fff && arr[i]>=0x8000) {
-      bits+=12;
+      bits=12;
+      proc=true;
+
     } else if (arr[i]<=0xff) {
-      bits+=8;
+      bits=8;
+      proc=true;
+    }
+    
+    //proccess data
+    while(bits>0 && proc){
+      cary=8-subB;
+      shift=subB;
+
+      if(bits<=cary){
+        subB+=bits;
+        res.bytes[dataI] |= ((arr[i]>>bitsPass)&((1<<bits)-1))<<shift;
+        bits=0;
+
+      } else if (bits>cary) {
+        subB=8;
+        res.bytes[dataI] |= ((arr[i]>>bitsPass)&((1<<cary)-1))<<shift;
+        bits-=cary;
+        bitsPass+=cary;
+        
+      }
+      dataI+=subB/8;
+      subB%=8;
     }
 
   }
 
-}*/
+  return res;
+
+}
 
