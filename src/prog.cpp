@@ -20,19 +20,21 @@ int main (int argc, char *argv[]) {
   }
   printf("\n");*/
 
-  dataBytes datB = deSten(codp.arr, codp.len);
+  //decoder
+  /*dataBytes datB = deSten(codp.arr, codp.len);
 
   for (int i = 0; i < datB.len; i++) {
     printf("%c", datB.bytes[i]);
   }
-  printf("\n");
+  printf("\n");*/
 
-  /*dataBytes ut_bytes=enSten(argv[1], strlen(argv[1]));
+  //encoder
+  dataBytes ut_bytes=enSten(argv[1], strlen(argv[1]));
 
   for (int i = 0; i < ut_bytes.len; i++) {
     printf("%c", ut_bytes.bytes[i]);
   }
-  printf("\n");*/
+  printf("\n");
 
   return 0;
 }

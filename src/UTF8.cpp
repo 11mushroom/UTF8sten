@@ -258,7 +258,7 @@ dataBytes enSten(char* arr, int len){
     }
 
 
-    if (subB>=12) {
+    if (subB>=12||(i>=len)) {
       dataBytes utf=UTF8_enc(codePoint);
       for (int a = 0; a < utf.len; a++) {
         res.bytes[dataI+a]=utf.bytes[a];
@@ -269,6 +269,7 @@ dataBytes enSten(char* arr, int len){
 
     subB%=12;
   }
+
   return res;
 }
 
