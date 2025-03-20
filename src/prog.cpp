@@ -13,12 +13,12 @@ int main (int argc, char *argv[]) {
   //printf("%i\n", UTF8_den(argv[1]).arr[1]);
 
   codePoints codp=UTF8_den(argv[1]);
-  printf("sten bytes: %i\n", getStenLen(codp.arr, codp.len));
+  //printf("sten bytes: %i\n", getStenLen(codp.arr, codp.len));
   dataBytes datB = deSten(codp.arr, codp.len);
-  for(int i=0;i<codp.len;i++){
+  /*for(int i=0;i<codp.len;i++){
     printf("%i ", codp.arr[i]);
   }
-  printf("\n");
+  printf("\n");*/
 
   for (int i = 0; i < datB.len; i++) {
     printf("%c", datB.bytes[i]);

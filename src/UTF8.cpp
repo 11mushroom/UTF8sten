@@ -35,6 +35,13 @@ struct dataBytes {
   }
 };
 
+int getEnLen(int len){
+  int res=0;
+  res=(len/3)*6;
+  res+=(len%3)*3;
+  return res;
+}
+
 int getStenLen(int *arr, int len){
   int res=0;
   int bits=0;
@@ -94,7 +101,7 @@ char* UTF8_enc(unsigned int code){
 
 int calcLen(char *str){
   int bytes=strlen(str);
-  printf("bytes: %i\n", bytes);
+  //printf("bytes: %i\n", bytes);
   int i=0;
   int res=0;
   int subI=0;
