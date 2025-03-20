@@ -71,28 +71,28 @@ int gBit(int num, int ind){
   return (num>>ind)&1;
 }
 
-char* UTF8_enc(unsigned int code){
+dataBytes UTF8_enc(unsigned int code){
   unsigned char len=(code<0x10000)?((code<0x0800)?((code<0x0080)?1:2):3):4;
-  char* bytes=new char[len];
+  dataBytes bytes(len);
  
   switch (len) {
     case 1:
-      bytes[0]=code;
+      bytes.bytes[0]=code;
       break;
     case 2:
-      bytes[0]=PB2|((code>>6)&MASK5);
-      bytes[1]=OCTPR|(code&MASK6);
+      bytes.bytes[0]=PB2|((code>>6)&MASK5);
+      bytes.bytes[1]=OCTPR|(code&MASK6);
       break;
     case 3:
-      bytes[0]=PB3|((code>>12)&MASK4);
-      bytes[1]=OCTPR|((code>>6)&MASK6);
-      bytes[2]=OCTPR|(code&MASK6);
+      bytes.bytes[0]=PB3|((code>>12)&MASK4);
+      bytes.bytes[1]=OCTPR|((code>>6)&MASK6);
+      bytes.bytes[2]=OCTPR|(code&MASK6);
       break;
     case 4:
-      bytes[0]=PB4|((code>>18)&MASK3);
-      bytes[1]=OCTPR|((code>>12)&MASK6);
-      bytes[2]=OCTPR|((code>>6)&MASK6);
-      bytes[3]=OCTPR|(code&MASK6);
+      bytes.bytes[0]=PB4|((code>>18)&MASK3);
+      bytes.bytes[1]=OCTPR|((code>>12)&MASK6);
+      bytes.bytes[2]=OCTPR|((code>>6)&MASK6);
+      bytes.bytes[3]=OCTPR|(code&MASK6);
       break;
   }
   
@@ -219,6 +219,57 @@ codePoints UTF8_den( char *bytes ){
 
   return res;
 
+}
+
+dataBytes enSten(char* arr, int len){
+  int enLen=getEnLen(len);
+  dataBytes res(enLen);
+
+  int codePoint=0x8000;
+  int subB=0;
+  int bits=0;
+  int cary=0;
+  int shift=0;
+  int bitsPass=0;
+  int dataI=0;
+  int i=0;
+
+  while(i < len) {
+    if(bits<=0){
+      bits=8;
+    }
+    cary=12-subB;
+    shift=subB;
+
+
+    if (bits<=cary){
+      subB+=bits;
+      codePoint|=((arr[i]>>bitsPass)&((1<<bits)-1))<<shift;
+      bits=0;
+      bitsPass=0;
+      i++;
+
+    } else if (bits>cary) {
+      subB=12;
+      codePoint|=((arr[i]>>bitsPass)&((1<<cary)-1))<<shift;
+      bits-=cary;
+      bitsPass=cary;
+
+    }
+
+
+    if (subB>=12) {
+      dataBytes utf=UTF8_enc(codePoint);
+      for (int a = 0; a < utf.len; a++) {
+        res.bytes[dataI+a]=utf.bytes[a];
+      }
+      dataI+=utf.len;
+      codePoint=0x8000;
+    }
+
+    subB%=12;
+  }
+  return res;
 }
 
 dataBytes deSten(int *arr, int len){
