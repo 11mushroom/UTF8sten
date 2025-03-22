@@ -319,6 +319,10 @@ dataBytes deSten(int *arr, int len){
       bits=12;
       proc=true;
 
+    } else if (arr[i]<=0x8ff && arr[i]>=0x800) {
+      bits=8;
+      proc=true;
+      
     } else if (arr[i]<=0xff) {
       bits=8;
       proc=true;
