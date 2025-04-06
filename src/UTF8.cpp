@@ -17,6 +17,8 @@
 #define RMASK5 0b11111000
 
 
+//structure for array with code points
+
 struct codePoints {
   int *arr;
   int len;
@@ -25,6 +27,8 @@ struct codePoints {
     this->len=length;
   }
 };
+
+//structure for array of bytes
 
 struct dataBytes {
   char *bytes;
@@ -35,12 +39,16 @@ struct dataBytes {
   }
 };
 
+//function to calculate amount of encoded data will take in bytes
+
 int getEnLen(int len){
   int res=0;
   res=(len/3)*6;
   res+=(len%3)*3;
   return res;
 }
+
+//function to calculate amount of decoded data will take in bytes
 
 int getStenLen(int *arr, int len){
   int res=0;
@@ -63,6 +71,8 @@ int getStenLen(int *arr, int len){
   return res;
 }
 
+//functions to get value of specific bit in number
+
 int gBit(char num, int ind){
   return (num>>ind)&1;
 }
@@ -70,6 +80,9 @@ int gBit(char num, int ind){
 int gBit(int num, int ind){
   return (num>>ind)&1;
 }
+
+//function to encode single code point into UTF-8
+//it recives unsigned code and returns structure of array of bytes
 
 dataBytes UTF8_enc(unsigned int code){
   unsigned char len=(code<0x10000)?((code<0x0800)?((code<0x0080)?1:2):3):4;
@@ -79,15 +92,18 @@ dataBytes UTF8_enc(unsigned int code){
     case 1:
       bytes.bytes[0]=code;
       break;
+
     case 2:
       bytes.bytes[0]=PB2|((code>>6)&MASK5);
       bytes.bytes[1]=OCTPR|(code&MASK6);
       break;
+
     case 3:
       bytes.bytes[0]=PB3|((code>>12)&MASK4);
       bytes.bytes[1]=OCTPR|((code>>6)&MASK6);
       bytes.bytes[2]=OCTPR|(code&MASK6);
       break;
+
     case 4:
       bytes.bytes[0]=PB4|((code>>18)&MASK3);
       bytes.bytes[1]=OCTPR|((code>>12)&MASK6);
@@ -98,6 +114,8 @@ dataBytes UTF8_enc(unsigned int code){
   
   return bytes;
 }
+
+//function to calculate length of string not by bytes but by characters, including UTF-8 characters
 
 int calcLen(char *str){
   int bytes=strlen(str);
@@ -143,6 +161,8 @@ int calcLen(char *str){
   }
   return res;
 }
+
+//function to deencode string that contains UTF-8 characters and returns structure with array of codepoints of characters
 
 codePoints UTF8_den( char *bytes ){
 
@@ -221,6 +241,8 @@ codePoints UTF8_den( char *bytes ){
 
 }
 
+//function to encode bytes in UTF-8 characters, recives array of bytes and length of that array, and returns string with data stored in UTF-8 characters
+
 dataBytes enSten(char* arr, int len){
   int enLen=getEnLen(len);
   dataBytes res(enLen);
@@ -273,6 +295,9 @@ dataBytes enSten(char* arr, int len){
   return res;
 }
 
+//function to decode data from string of UTF-8 characters
+//decodes result of enSten function
+
 dataBytes deSten(int *arr, int len){
   dataBytes res(getStenLen(arr, len));
 
@@ -294,6 +319,10 @@ dataBytes deSten(int *arr, int len){
       bits=12;
       proc=true;
 
+    } else if (arr[i]<=0x8ff && arr[i]>=0x800) {
+      bits=8;
+      proc=true;
+      
     } else if (arr[i]<=0xff) {
       bits=8;
       proc=true;
