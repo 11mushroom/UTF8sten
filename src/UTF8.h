@@ -1,6 +1,9 @@
 #ifndef UTF8
 #define UTF8
 
+#include <algorithm>
+#include <iostream>
+#include <utility>
 #define OCTPR  0b10000000
 #define PB2    0b11000000
 #define PB3    0b11100000
@@ -16,20 +19,78 @@
 #define RMASK5 0b11111000
 
 struct codePoints {
-  int *arr;
+  int *arr=nullptr;
   int len;
   codePoints(int length){
+    delete[] this->arr;
     this->arr=new int[length];
     this->len=length;
   }
+  
+  ~codePoints(){
+    delete[] this->arr;
+  }
+
+  codePoints(const codePoints& other){
+    this->arr = new int[other.len];
+    std::copy(other.arr, other.arr+other.len, this->arr);
+    this->len=other.len;
+  }
+
+  codePoints(codePoints&& other) noexcept {
+    std::swap(this->arr, other.arr);
+    this->len=other.len;
+  }
+
+  codePoints& operator=(const codePoints& other){
+
+    return *this = codePoints(other);
+  }
+
+  codePoints& operator=(codePoints&& other) noexcept {
+    std::swap(this->arr, other.arr);
+    this->len=other.len;
+
+    return *this;
+  }
+  
+
 };
 
 struct dataBytes {
-  char *bytes;
+  char *bytes=nullptr;
   int len;
   dataBytes(int length){
     this->bytes=new char[length];
     this->len=length;
+  }
+
+
+  ~dataBytes(){
+    delete[] this->bytes;
+  }
+
+  dataBytes(const dataBytes& other){
+    this->bytes = new char[other.len];
+    std::copy(other.bytes, other.bytes+other.len, this->bytes);
+    this->len=other.len;
+  }
+
+  dataBytes(dataBytes&& other) noexcept {
+    std::swap(this->bytes, other.bytes);
+    this->len=other.len;
+  }
+
+  dataBytes& operator=(const dataBytes& other){
+
+    return *this = dataBytes(other);
+  }
+
+  dataBytes& operator=(dataBytes&& other) noexcept {
+    std::swap(this->bytes, other.bytes);
+    this->len=other.len;
+
+    return *this;
   }
 };
 

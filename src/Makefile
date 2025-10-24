@@ -41,8 +41,8 @@ encoder: encoder.o UTF8.o
 encoder.o: encoder.cpp UTF8.h
 	$(CXX) -c $(CXXFLAGS) $< -o $@
 
-UTF8.o: UTF8.cpp
-	$(CXX) -c $(CXXFLAGS) $^ -o $@
+UTF8.o: UTF8.cpp UTF8.h
+	$(CXX) -c $(CXXFLAGS) $< -o $@
 
 install:
 	cp decoder $(INSTDIR)/$(decoderfn)
