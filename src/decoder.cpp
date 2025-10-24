@@ -1,26 +1,44 @@
 #include <cstdio>
 #include <cstring>
+#include <iostream>
 #include <stdio.h>
 #include "UTF8.h"
 
+void bytes2out(dataBytes&& bytes){
+  std::cout.write(bytes.bytes, bytes.len);
+}
+
 int main (int argc, char *argv[]) {
 
-  codePoints codp=UTF8_den(argv[1]);
-  
-  //printf("sten bytes: %i\n", getStenLen(codp.arr, codp.len));
-  /*for(int i=0;i<codp.len;i++){
-    printf("%i ", codp.arr[i]);
+  if (argc>1){
+    codePoints codp=UTF8_den(argv[1]);
+    
+    bytes2out(deSten(codp.arr, codp.len));
+    std::cout << std::endl;
+
+  } else {
+
+    const ssize_t bs=510;
+    char buffer[bs+1];
+    codePoints codp(1);
+
+    std::cin.tie(nullptr);
+
+    while (std::cin.read(buffer, bs)) {
+      codp=UTF8_den(buffer);
+
+      bytes2out(deSten(codp.arr, codp.len));
+
+    }
+
+    //ssize_t tail_size = std::cin.gcount();
+    buffer[std::cin.gcount()]=0;
+
+    codp=UTF8_den(buffer);
+    bytes2out(deSten(codp.arr, codp.len));
+    std::cout << std::endl;
+
   }
-  printf("\n");*/
-
-  //decoder
-  dataBytes datB = deSten(codp.arr, codp.len);
-
-  for (int i = 0; i < datB.len; i++) {
-    printf("%c", datB.bytes[i]);
-  }
-  printf("\n");
-
   //encoder
   /*dataBytes ut_bytes=enSten(argv[1], strlen(argv[1]));
 
