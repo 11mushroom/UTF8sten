@@ -39,6 +39,7 @@ int main (int argc, char *argv[]) {
 
     const ssize_t bs=510;
     char buffer[bs+1];
+    buffer[bs]=0;
     codePoints codp(1);
 
     std::cin.tie(nullptr);

@@ -39,8 +39,7 @@ struct codePoints {
   int *arr=nullptr;
   int len;
   codePoints(int length){
-    delete[] this->arr;
-    this->arr=new int[length];
+    this->arr=new int[length]();
     this->len=length;
   }
   
@@ -78,7 +77,7 @@ struct dataBytes {
   char *bytes=nullptr;
   int len;
   dataBytes(int length){
-    this->bytes=new char[length];
+    this->bytes=new char[length]();
     this->len=length;
   }
 
