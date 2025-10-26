@@ -42,8 +42,10 @@ int getStenLen(int *arr, int len){
       bits+=8;
     }
 
-    res+=bits/8;
-    bits=bits%8;
+    //res+=bits/8;
+    //bits=bits%8;
+    res+=bits>>3;
+    bits&=7;
   }
 
   if(bits>0)
@@ -247,14 +249,16 @@ dataBytes enSten(char* arr, int len){
 
     if (bits<=cary){
       subB+=bits;
-      codePoint|=((arr[i]>>bitsPass)&((1<<bits)-1))<<shift;
+      //codePoint|=((arr[i]>>bitsPass)&((1<<bits)-1))<<shift;
+      codePoint|=((arr[i]>>bitsPass)&(~(-1<<bits)))<<shift;
       bits=0;
       bitsPass=0;
       i++;
 
     } else if (bits>cary) {
       subB=12;
-      codePoint|=((arr[i]>>bitsPass)&((1<<cary)-1))<<shift;
+      //codePoint|=((arr[i]>>bitsPass)&((1<<cary)-1))<<shift;
+      codePoint|=((arr[i]>>bitsPass)&(~(-1<<cary)))<<shift;
       bits-=cary;
       bitsPass=cary;
 
@@ -316,18 +320,22 @@ dataBytes deSten(int *arr, int len){
 
       if(bits<=cary){
         subB+=bits;
-        res.bytes[dataI] |= ((arr[i]>>bitsPass)&((1<<bits)-1))<<shift;
+        //res.bytes[dataI] |= ((arr[i]>>bitsPass)&((1<<bits)-1))<<shift;
+        res.bytes[dataI] |= ((arr[i]>>bitsPass)&(~(-1<<bits)))<<shift;
         bits=0;
 
       } else if (bits>cary) {
         subB=8;
-        res.bytes[dataI] |= ((arr[i]>>bitsPass)&((1<<cary)-1))<<shift;
+        //res.bytes[dataI] |= ((arr[i]>>bitsPass)&((1<<cary)-1))<<shift;
+        res.bytes[dataI] |= ((arr[i]>>bitsPass)&(~(-1<<cary)))<<shift;
         bits-=cary;
         bitsPass+=cary;
         
       }
-      dataI+=subB/8;
-      subB%=8;
+      //dataI+=subB/8;
+      //subB%=8;
+      dataI+=subB>>3;
+      subB&=7;
     }
 
   }

@@ -1,5 +1,5 @@
 CXX ?= g++
-CXXFLAGS ?= -g -Wall
+CXXFLAGS ?= -O3 -g -Wall
 PREFIX ?= /usr
 INSTDIR ?= $(PREFIX)/bin
 srcdir = src
